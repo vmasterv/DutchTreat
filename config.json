@@ -1,0 +1,16 @@
+{
+	"ConnectionStrings": {
+		"DutchContextDb": "Data Source=DAF-DENIS\\SQLEXPRESS;Initial Catalog=InitialDb;Trusted_Connection=True;Connect Timeout=30;MultiSubnetFailover=False"
+	},
+	"Logging": {
+		"LogLevel": {
+			"Default": "Information",
+			"Microsoft": "Warning"
+		}
+	},
+	"Tokens": {
+		"Key": "awdawdawdawdfa",
+		"Issuer": "http://localhost:8888",
+		"Audience": "http://localhost:8888"
+	}
+}
