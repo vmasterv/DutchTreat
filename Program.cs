@@ -28,7 +28,6 @@ namespace DutchTreat
                 host.Run();
             }
 
-
         }
 
         private static void RunSeeding(IHost host)

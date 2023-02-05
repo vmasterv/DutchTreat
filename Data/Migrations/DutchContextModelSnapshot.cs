@@ -45,7 +45,7 @@ namespace DutchTreat.Migrations
                         new
                         {
                             Id = 1,
-                            OrderDate = new DateTime(2023, 1, 25, 10, 13, 53, 989, DateTimeKind.Utc).AddTicks(1841),
+                            OrderDate = new DateTime(2023, 1, 29, 20, 51, 5, 29, DateTimeKind.Utc).AddTicks(328),
                             OrderNumber = "12345"
                         });
                 });

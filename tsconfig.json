@@ -1,8 +1,0 @@
-{
-	"inlcude": [ "wwwroot/ts/**/*.ts" ],
-	"compileOnSave": true,
-	"compilerOptions": {
-		"module": "None",
-		"sourceMap":  true
-	}
-}

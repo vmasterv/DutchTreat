@@ -39,7 +39,9 @@ namespace DutchTreat.Data
 
         public async Task SeedAsync()
         {
+            Console.WriteLine("SeedAsync method called.");
             _ctx.Database.EnsureCreated();
+
 
             var user = await _userManager.FindByEmailAsync("shawn@dutchtreat.com");
             if (user == null)
@@ -51,6 +53,7 @@ namespace DutchTreat.Data
                     UserName = "shawn@dutchtreat.com",
                     Email = "shawn@dutchtreat.com"
                 };
+
                 var result = await _userManager.CreateAsync(user, "P@ssw0rd!");
                 if (result != IdentityResult.Success)
                 {

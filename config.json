@@ -9,7 +9,7 @@
 		}
 	},
 	"Tokens": {
-		"Key": "awdawdawdawdfa",
+		"Key": "awdawdawdawdfa,awdaw,daw,da,wd,awd,a,wd;Awd;dawwda",
 		"Issuer": "http://localhost:8888",
 		"Audience": "http://localhost:8888"
 	}

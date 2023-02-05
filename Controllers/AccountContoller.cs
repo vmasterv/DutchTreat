@@ -109,16 +109,16 @@ namespace DutchTreat.Controllers
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
                         };
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token" +
-                            ":Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
                         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                         var token = new JwtSecurityToken(
-                            _config["Token:Issuer"],
-                            _config["Token:Audience"],
+                            _config["Tokens:Issuer"],
+                            _config["Tokens:Audience"],
                             claims,
-                            expires: DateTime.UtcNow.AddMinutes(20),
-                            signingCredentials: creds
+                            signingCredentials: creds,
+                            expires: DateTime.UtcNow.AddMinutes(20)
+                            
                             );
 
 

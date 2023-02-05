@@ -63,6 +63,6 @@
     <TypeScriptCompile Include="wwwroot\ts\shopper.ts" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties tsconfig_1json__JsonSchema="https://json.schemastore.org/tsconfig.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
