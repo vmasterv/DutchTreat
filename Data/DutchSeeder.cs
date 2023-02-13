@@ -65,6 +65,8 @@ namespace DutchTreat.Data
 
             if (!_ctx.Products.Any())
             {
+                Console.WriteLine("Products part of method called.");
+
                 var filePath = Path.Combine(_env.ContentRootPath, "Data/art.json");
                 var json = File.ReadAllText(filePath);
                 var products = JsonSerializer.Deserialize<IEnumerable<Product>>(json);
@@ -88,14 +90,15 @@ namespace DutchTreat.Data
 
                     };
 
-
+                    _ctx.Orders.Add(order);
                 }
-                _ctx.Orders.Add(order);
-
+                
 
 
                 _ctx.SaveChanges();
+
             }
+            
         }
     }
 }

@@ -165,7 +165,7 @@ namespace DutchTreat.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "OrderDate",
-                value: new DateTime(2023, 1, 29, 20, 51, 5, 29, DateTimeKind.Utc).AddTicks(328));
+                value: new DateTime(2023, 2, 6, 10, 37, 41, 661, DateTimeKind.Utc).AddTicks(6032));
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
