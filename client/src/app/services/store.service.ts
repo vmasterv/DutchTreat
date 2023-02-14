@@ -21,10 +21,10 @@ export class Store {
 
     loadProducts(): Observable<void> {
         return this.http.get<Product[]>("/api/products")
-            .pipe(map(data => {
-                this.products = ((data) as Product[]);
+            .pipe(map((data => {
+                this.products = data;
                 return;
-            }));
+            })));
     }
 
     get loginRequired(): boolean {
