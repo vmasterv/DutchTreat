@@ -2,6 +2,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { LoginRequest, LoginResults } from "../shared/LoginResults";
 import { Order, OrderItem } from "../shared/Order";
 import { Product } from "../shared/Product";
 /*import { Order, OrderItem } from "../shared/Order";*/
@@ -36,13 +37,13 @@ export class Store {
         }
     }
 
-    //login(creds: LoginRequest) {
-    //    return this.http.post<LoginResults>("/account/createtoken", creds)
-    //        .pipe(map(data => {
-    //            this.token = data.token;
-    //            this.expiration = data.expiration;
-    //        }));
-    //}
+    login(creds: LoginRequest) {
+        return this.http.post<LoginResults>("/account/createtoken", creds)
+            .pipe(map(data => {
+                this.token = data.token;
+                this.expiration = data.expiration;
+            }));
+    }
 
     addToOrder(product: Product) {
         let item: OrderItem;

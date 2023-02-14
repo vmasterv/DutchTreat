@@ -11,6 +11,7 @@ import { ShopPage } from './pages/shopPage.component';
 import { Checkout } from './pages/checkout.component';
 import { AuthActivator } from './services/authActivator.service';
 import { LoginPage } from './pages/loginPage.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { LoginPage } from './pages/loginPage.component';
   imports: [
       BrowserModule,
       HttpClientModule,
-      router
+      router,
+      FormsModule
   ],
     providers: [
         Store,
