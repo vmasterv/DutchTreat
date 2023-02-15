@@ -1,29 +1,30 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using DutchTreat.Data;
-using DutchTreat.Data.Entities;
+
 using DutchTreat.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DutchTreat.Controllers
 {
-    [Route("/api/orders/{orderid}/items")]
+    [Route("api/orders/{orderid}/items")]
+    [ApiController]
+    [Produces("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class OrderItemsController : Controller
+    public class OrderItemsController : ControllerBase
     {
         private readonly IDutchRepository _repository;
         private readonly ILogger<OrderItemsController> _logger;
         private readonly IMapper _mapper;
 
-        public OrderItemsController(IDutchRepository repository, 
-            ILogger<OrderItemsController> logger, 
+        public OrderItemsController(
+            IDutchRepository repository,
+            ILogger<OrderItemsController> logger,
             IMapper mapper)
         {
             _repository = repository;
@@ -32,28 +33,66 @@ namespace DutchTreat.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int orderId)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public ActionResult<IEnumerable<OrderItemViewModel>> Get(int orderId)
         {
-            var order = _repository.GetOrderById(User.Identity.Name, orderId);
-            if (order != null) return Ok(_mapper.Map<IEnumerable<OrderItem>, 
-                IEnumerable<OrderItemViewModel>>(order.Items));
-            return NotFound();
+            try
+            {
+                var order = _repository.GetOrderById(User.Identity.Name, orderId);
+
+                if (order == null)
+                {
+                    return NotFound($"No order found with orderId: {orderId}");
+                }
+
+                if (order.Items.Count > 0)
+                {
+                    return Ok(_mapper.Map<IEnumerable<OrderItemViewModel>>(order.Items));
+                }
+
+                return NotFound("No items found for order.");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get items for order: {e}");
+                return BadRequest("Failed to get items for order.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int orderId, int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public ActionResult<OrderItemViewModel> Get(int orderId, int id)
         {
-            var order = _repository.GetOrderById(User.Identity.Name, orderId);
-
-            if (order != null)
+            try
             {
-                var item = order.Items.Where(i => i.Id == id).FirstOrDefault();
-                if (item != null)
+                var order = _repository.GetOrderById(User.Identity.Name, orderId);
+
+                if (order == null)
                 {
-                    return Ok(_mapper.Map<IEnumerable<OrderItem>, IEnumerable<OrderItemViewModel>>(order.Items));
+                    return NotFound($"No order found with orderId: {orderId}");
                 }
+
+                var orderItem = order
+                    .Items
+                    .FirstOrDefault(i => i.Id == id);
+
+                if (orderItem != null)
+                {
+                    return Ok(_mapper.Map<OrderItemViewModel>(orderItem));
+                }
+
+                return NotFound($"No item found with the id: {id}");
             }
-            return NotFound();
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get item: {e}");
+                return BadRequest("Failed to get item.");
+            }
         }
+
     }
 }

@@ -1,26 +1,23 @@
-﻿using DutchTreat.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
+using DutchTreat.Data;
+using DutchTreat.Data.Entities;
+
+using DutchTreat.ViewModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DutchTreat.Data.Entities;
-using Microsoft.AspNetCore.HttpOverrides;
-using DutchTreat.ViewModels;
-using AutoMapper;
-using System.Collections;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 
 namespace DutchTreat.Controllers
 {
     [Route("api/[Controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    
+    [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OrdersController : ControllerBase
     {
         private readonly IDutchRepository _repository;
@@ -28,7 +25,8 @@ namespace DutchTreat.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<StoreUser> _userManager;
 
-        public OrdersController(IDutchRepository repository, 
+        public OrdersController(
+            IDutchRepository repository,
             ILogger<OrdersController> logger,
             IMapper mapper,
             UserManager<StoreUser> userManager)
@@ -38,40 +36,48 @@ namespace DutchTreat.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
-    
 
         [HttpGet]
-        public IActionResult Get(bool includeItems = true)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public ActionResult<IEnumerable<OrderViewModel>> Get(bool includeItems = true)
         {
-            
             try
-                {
+            {
                 var username = User.Identity.Name;
-                var results = _repository.GetAllOrdersByUser(username, includeItems);
-                return Ok(_mapper.Map<IEnumerable<Order>>(results));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Failed to get orders: {ex}");
-                    return BadRequest("Failed to get orders");
-                }
+
+                var result = _repository.GetAllOrdersByUser(username, includeItems);
+
+                return Ok(_mapper.Map<IEnumerable<OrderViewModel>>(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get all orders: {e}");
+                return BadRequest("Failed to get all orders.");
+            }
         }
 
         [HttpGet("{id:int}")]
-
-        public IActionResult Get(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public ActionResult<OrderViewModel> GetOrderById(int id)
         {
             try
             {
-                var order = _repository.GetOrderById(User.Identity.Name, id) ;
+                var order = _repository.GetOrderById(User.Identity.Name, id);
 
-                if (order != null) return Ok(_mapper.Map<Order, OrderViewModel>(order));
-                else return NotFound();
+                if (order != null)
+                {
+                    return Ok(_mapper.Map<OrderViewModel>(order));
+                }
+
+                return NotFound($"Could not find order with id: {id}");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogError($"Failed to get orders: {ex}");
-                return BadRequest("Failed to get orders");
+                _logger.LogError($"Failed to get order: {e}");
+                return BadRequest("Failed to get order.");
             }
         }
 
