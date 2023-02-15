@@ -76,41 +76,37 @@ namespace DutchTreat.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]OrderViewModel model)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> Post([FromBody] OrderViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var newOrder = _mapper.Map<OrderViewModel, Order>(model);
+                    var newOrder = _mapper.Map<Order>(model);
 
                     if (newOrder.OrderDate == DateTime.MinValue)
                     {
                         newOrder.OrderDate = DateTime.Now;
                     }
 
-                    var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-                    newOrder.User = currentUser;
+                    newOrder.User = await _userManager.FindByNameAsync(User.Identity.Name); ;
 
                     _repository.AddEntity(newOrder);
-                if (_repository.SaveAll())
-                {
-                        
-                        
-                        return Created($"/api/orders/{newOrder.Id}", _mapper.Map<Order, OrderViewModel>(newOrder));
-                }
-                }
-                else
-                {
-                    return BadRequest(ModelState);
+
+                    if (_repository.SaveAll())
+                    {
+                        return Created($"/api/orders/{newOrder.Id}", _mapper.Map<OrderViewModel>(newOrder));
+                    }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception e)
             {
-                _logger.LogError($"Failed to save a new order: {ex}");
+                _logger.LogError($"Failed to save the order: {e}");
             }
-            
-            return BadRequest("Failed to save new order");
+
+            return BadRequest("Failed to save the order.");
         }
     }
 }
