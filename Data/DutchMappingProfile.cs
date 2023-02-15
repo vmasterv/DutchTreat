@@ -4,6 +4,7 @@ using DutchTreat.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,8 @@ namespace DutchTreat.Data
                 .ReverseMap();
 
             CreateMap<OrderItem, OrderViewModel>()
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(m => m.Product, opt => opt.Ignore());
         }
 
     }

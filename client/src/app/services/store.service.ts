@@ -68,10 +68,10 @@ export class Store {
         }
     }
 
-    //checkout() {
-    //    const header = new HttpHeaders().set("Authorization", `Bearer ${this.token}`);
+    checkout() {
+        const header = new HttpHeaders().set("Authorization", `Bearer ${this.token}`);
 
-    //    return this.http.post("/api/orders", this.order, { headers: header })
-    //        .pipe(map(() => { this.order = new Order() }));
-    //}
+        return this.http.post("/api/orders", this.order, { headers: header })
+            .pipe(map(() => { this.order = new Order() }));
+    }
 }

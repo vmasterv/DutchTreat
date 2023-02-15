@@ -10,11 +10,18 @@ import { Store } from "../services/store.service";
 })
 export class Checkout {
 
+    public errorMessage: string = "";
+
   constructor(public store: Store, private router: Router) {
   }
 
-  onCheckout() {
-    // TODO
-    alert("Doing checkout");
-  }
+    onCheckout() {
+        this.errorMessage = "";
+        this.store.checkout()
+            .subscribe(() => {
+                this.router.navigate(["/"]);
+            }, err => {
+                this.errorMessage = `Failed to checkout: ${err}`;
+            })
+        }
 }
